@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.banking.dao">
+    <select id="selectName" parameterType="com.example.banking.model.MemberInfo" resultType="string">
+        select user_name from MEMBER_INFO where index=#{index}
+    </select>
+
+    <select id="selectAll" resultType="com.example.banking.model.MemberInfo">
+        select * from MEMBER_INFO
+    </select>
+
+    <insert id="insertMemberInfo" parameterType="com.example.banking.model.MemberInfo">
+        INSERT INTO MEMBER_INFO (user_id, user_name) VALUES (#{user_id}, #{user_name})
+    </insert>
+    <update id="updateIdCardImg" parameterType="com.example.banking.model.MemberInfo">
+        UPDATE MEMBER_INFO SET idcard_img=#{idcard_img} WHERE user_id=#{user_id}
+    </update>
+
+    <update id="updateIdCardInfo" parameterType="com.example.banking.model.MemberInfo">
+        UPDATE MEMBER_INFO SET
+        idcard_user_name=#{idcard_user_name},
+        regis_num=#{regis_num},
+        idcard_num=#{idcard_num},
+        idcard_reg_day=#{idcard_reg_day}
+        WHERE user_id=#{user_id}
+    </update>
+
+    <insert id="insertIdentiErrorLog" parameterType="com.example.banking.model.OpenAccountCheckLog">
+        INSERT INTO
+        IDENTI_CHECK_ERROR_LOG (set_account_process_PK, type, status)
+        VALUES (#{set_account_process_PK}, #{type}, #{status});
+    </insert>
+
+</mapper>
