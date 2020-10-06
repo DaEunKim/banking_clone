@@ -23,8 +23,8 @@ public class ApiDao {
 		return sqlSession.selectOne(NAMESPACE + "selectName", memberInfo);
 	}
 
-	public List<MemberInfo> selectAll(){
-		return sqlSession.selectList(NAMESPACE + "selectAll");
+	public List<MemberInfo> selectAllMemberInfo(){
+		return sqlSession.selectList(NAMESPACE + "selectAllMemberInfo");
 	}
 	public int insertMemberInfo(MemberInfo memberInfo){
 		return sqlSession.insert(NAMESPACE + "insertMemberInfo", memberInfo);

@@ -1,15 +1,17 @@
 package com.example.banking.controller;
 
-import com.example.banking.dao.ApiDao;
 import com.example.banking.model.MemberInfo;
 import com.example.banking.model.OpenAccountCheckLog;
 import com.example.banking.model.SetAccountProcess;
 import com.example.banking.service.IdentiCheckService;
+import com.example.banking.service.IdentiCheckServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.Date;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : DaEunKim
@@ -52,7 +54,7 @@ public class BankingApiController {
 	@PostMapping(value = "/updateIdCardInfo")
 	public String updateIdCardInfo(@RequestBody MemberInfo memberInfo, OpenAccountCheckLog openAccountCheckLog, SetAccountProcess setAccountProcess) {
 		//임의로 set_account_process_pk는 1로 설정
-		memberInfo.setIndex(1);
+		memberInfo.setINDEX(1);
 		// 유저 테이블에서 유저정보 가져오기 이름과 주민번호
 		// 신분증 분석 결과로 나온 유저 이름과 주민번호 가져오기
 		// DB 에 저장된 값을 호출해서 두 정보 비교
@@ -60,7 +62,7 @@ public class BankingApiController {
 		// 응답 return
 		//
 		String compName = identiCheckService.selectName(memberInfo);
-		if(compName.equals(memberInfo.getIdcard_user_name())){
+		if(compName.equals(memberInfo.getIDCARD_USER_NAME())){
 			identiCheckService.updateIdCardInfo(memberInfo);
 		}
 		else{
@@ -74,9 +76,17 @@ public class BankingApiController {
 	 * @Description 각 테이블 모든 데이터 select
 	 */
 	@GetMapping("/selectAll")
-	public List selectAll() {
-		List<MemberInfo> selectAll = identiCheckService.selectAll();
-		return selectAll;
+	public Map<String, List> selectAll() {
+		Map<String, List> map = new HashMap<String, List>();
+
+		List<MemberInfo> selectAllMemberInfo = identiCheckService.selectAllMemberInfo();
+		List<SetAccountProcess> selectAllSetAccountProcess = identiCheckService.selectAllSetAccountProcess();
+		List<OpenAccountCheckLog> selectAllAccountLog = identiCheckService.selectAllAccountLog();
+
+		map.put("selectAllMemberInfo",selectAllMemberInfo);
+		map.put("selectAllSetAccountProcess", selectAllSetAccountProcess);
+		map.put("selectAllAccountLog", selectAllAccountLog);
+		return map;
 	}
 
 }

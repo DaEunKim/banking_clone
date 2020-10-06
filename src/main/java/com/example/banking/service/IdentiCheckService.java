@@ -1,55 +1,30 @@
 package com.example.banking.service;
 
-import com.example.banking.dao.ApiDao;
 import com.example.banking.model.MemberInfo;
 import com.example.banking.model.OpenAccountCheckLog;
 import com.example.banking.model.SetAccountProcess;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.Date;
+
 import java.util.List;
 
 /**
  * @author : DaEunKim
- * @version : 2020.09.11
- * @Description : 신분증 인증 구현 서비스
+ * @version : 2020.10.06
+ * @Description : 신분증 인증 구현 서비스 인터페이스
  */
-@Service
-public class IdentiCheckService {
-	@Autowired
-	private ApiDao apiDao;
+public interface IdentiCheckService {
+	String selectName(MemberInfo memberInfo);
 
-	public String selectName(MemberInfo memberInfo) {
-		return apiDao.selectName(memberInfo);
-	}
+	List<MemberInfo> selectAllMemberInfo();
 
-	public List<MemberInfo> selectAll(){
+	int insertMemberInfo(MemberInfo memberInfo);
 
-		return apiDao.selectAll();
-	}
-	public int insertMemberInfo(MemberInfo memberInfo){
-		return apiDao.insertMemberInfo(memberInfo);
-	}
+	int updateIdCardImg(MemberInfo memberInfo);
 
-	public int updateIdCardImg(MemberInfo memberInfo) {
+	int updateIdCardInfo(MemberInfo memberInfo);
 
-		return apiDao.updateIdCardImg(memberInfo);
-	}
+	String insertLog(OpenAccountCheckLog openAccountCheckLog, SetAccountProcess setAccountProcess);
 
-	public int updateIdCardInfo(MemberInfo memberInfo) {
-		return apiDao.updateIdCardInfo(memberInfo);
-	}
+	List<SetAccountProcess> selectAllSetAccountProcess();
 
-	public String insertLog(OpenAccountCheckLog openAccountCheckLog, SetAccountProcess setAccountProcess){
-		Date now = new Date();
-		openAccountCheckLog.setSet_account_process_PK(1);
-		openAccountCheckLog.setType("identi");
-		openAccountCheckLog.setStatus("error");
-		openAccountCheckLog.setDatetime(now);
-		setAccountProcess.setIdenti_check("N");
-
-		apiDao.insertIdentiErrorLog(openAccountCheckLog);
-		return setAccountProcess.getIdenti_check();
-	}
-
+	List<OpenAccountCheckLog> selectAllAccountLog();
 }
