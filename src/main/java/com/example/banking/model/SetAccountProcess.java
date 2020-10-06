@@ -9,9 +9,9 @@ import lombok.Data;
  */
 @Data
 public class SetAccountProcess {
-	private Integer index;
-	private Integer user_info_pk; // MEMBER_INFO 테이블 pk (유저 정보)
-	private Integer last_page; // 마지막 완료 페이지 번호
-	private String account_type; // 개설 통장 종류
-	private String identi_check; // 신분증 확인 여부 (Y/N)
+	private Integer INDEX;
+	private Integer USER_INFO_PK;   // MEMBER_INFO 테이블 pk (유저 정보)
+	private Integer LAST_PAGE;      // 마지막 완료 페이지 번호
+	private String ACCOUNT_TYPE;    // 개설 통장 종류
+	private String IDENTI_CHECK;    // 신분증 확인 여부 (Y/N)
 }

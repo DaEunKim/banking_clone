@@ -5,8 +5,16 @@
         select user_name from MEMBER_INFO where index=#{index}
     </select>
 
-    <select id="selectAll" resultType="com.example.banking.model.MemberInfo">
+    <select id="selectAllMemberInfo" resultType="com.example.banking.model.MemberInfo">
         select * from MEMBER_INFO
+    </select>
+
+    <select id="selectAllSetAccountProcess" resultType="com.example.banking.model.SetAccountProcess">
+        select * from SET_ACCOUNT_PROCESS
+    </select>
+
+    <select id="selectAllAccountLog" resultType="com.example.banking.model.OpenAccountCheckLog">
+        select * from OPEN_ACCOUNT_CHECK_LOG
     </select>
 
     <insert id="insertMemberInfo" parameterType="com.example.banking.model.MemberInfo">
