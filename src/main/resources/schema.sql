@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS MEMBER_INFO;
 CREATE TABLE MEMBER_INFO
 (
 	INDEX INT auto_increment not null,
-	USER_ID VARCHAR(255), -- 사용자 ID
+	USER_ID VARCHAR(255), -- 사용자 ID, 중복 없음
 	USER_NAME VARCHAR(255), -- 사용자 이름 - 고객 개발 AP에서 받은 정보, 동시 거래 검증에도 필요
 	REGIS_NUM VARCHAR(255), -- 주민등록번호 (암호화하여 저장) - 고객 개발 AP에서 받은 정보, 동시 거래 검증에도 필요
 	ACCOUNT_NUM VARCHAR(255), -- 계좌 번호 - 수신 개발 AP에서 받을 정보, 동시 거래 검증에도 필요

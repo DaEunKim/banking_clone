@@ -55,7 +55,7 @@ public class BankingApiController {
 	@PostMapping(value = "/updateIdCardInfo")
 	public MemberInfo updateIdCardInfo(@RequestBody HashMap<String, String> MobileUserInfo) throws Exception{
 
-		// 모바일에서 준 유저 아이디로 고객 정보에서 준 주
+		// 모바일에서 준 유저 아이디로 준 것으로 select
 		// 유저 테이블에서 유저정보 가져오기 이름과 주민번호
 		// 신분증 분석 결과로 나온 유저 이름과 주민번호 가져오기
 		// DB 에 저장된 값을 호출해서 두 정보 비교
@@ -74,7 +74,7 @@ public class BankingApiController {
 			log.info("userInfo empty ");
 		}
 		else{
-			if(MobileUserInfo.get("user_ID").equals(userInfo.getIDCARD_USER_NAME())){
+			if(userInfo.getUSER_NAME().equals(userInfo.getIDCARD_USER_NAME()) && userInfo.getREGIS_NUM().equals(userInfo.getIDCARD_REGIS_NUM())){
 				log.info("equal " + userInfo.getUSER_NAME());
 //				SET_ACCOUNT_PROCESS 테이블에 Y insert
 // 				OPEN_ACCOUNT_CHECK_LOG 기록
