@@ -26,11 +26,11 @@ public class BankingApiController {
 	/**
 	 * @author : DaEunKim
 	 * @Description
-	 * 1. 유저 정보 요청 API -> 받고 저장 -> 응답 (sync)
-	 * 2. 모바일로 신분증 경로 받는 API -> 받고 저장
-	 * 3. 인증 개발 AP로 신분증 분석 요청 API -> 분석 결과 받고 저장 -> 응답 (sync)
+	 * 1. 모바일에서 신분증 경로를 알려주면서 인증 요청을 받으면 (내가 개발할 API)
+	 * 2. 유저 정보 요청 API(고객 개발 AP의 API) -> 값을 포함한 응답 정상이면 저장 (sync)(응답 올 때까지 대기)
+	 * 3. 인증 개발 AP로 신분증 분석 요청 API(인증 개발 AP의 API) -> 분석 결과 값을 포함한 응답 정상이면 저장 (sync)
 	 * 분석 결과 값(주민번호 분석 등) 유저 정보와 비교 로직
-	 * 1번 API 응답(sync)
+	 * 1번 모바일 API 응답(sync)
 	 */
 
 
@@ -40,6 +40,7 @@ public class BankingApiController {
 	 */
 	@PostMapping(path = "/insertMemberInfo")
 	public String insertMemberInfo(@RequestBody MemberInfo memberInfo){
+		// 유저 테이블에 고객 정보와 신분증 경로 insert 할때 SET_ACCOUNT_PROCESS 테이블에도 같이 insert 해야함
 		identiCheckService.insertMemberInfo(memberInfo);
 		identiCheckService.updateIdCardImg(memberInfo);
 		return "success";
@@ -52,6 +53,12 @@ public class BankingApiController {
 	public String updateIdCardInfo(@RequestBody MemberInfo memberInfo, OpenAccountCheckLog openAccountCheckLog, SetAccountProcess setAccountProcess) {
 		//임의로 set_account_process_pk는 1로 설정
 		memberInfo.setIndex(1);
+		// 유저 테이블에서 유저정보 가져오기 이름과 주민번호
+		// 신분증 분석 결과로 나온 유저 이름과 주민번호 가져오기
+		// DB 에 저장된 값을 호출해서 두 정보 비교
+		// 맞으면 계좌 개설 테이블에 insert, 틀리면 오류 테이블에 insert
+		// 응답 return
+		//
 		String compName = identiCheckService.selectName(memberInfo);
 		if(compName.equals(memberInfo.getIdcard_user_name())){
 			identiCheckService.updateIdCardInfo(memberInfo);

@@ -17,43 +17,4 @@ public class OpenAccountCheckLog {
 	private String status;
 	private Date datetime;
 
-	public Integer getIndex() {
-		return index;
-	}
-
-	public void setIndex(Integer index) {
-		this.index = index;
-	}
-
-	public Integer getSet_account_process_PK() {
-		return set_account_process_PK;
-	}
-
-	public void setSet_account_process_PK(Integer set_account_process_PK) {
-		this.set_account_process_PK = set_account_process_PK;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public Date getDatetime() {
-		return datetime;
-	}
-
-	public void setDatetime(Date datetime) {
-		this.datetime = datetime;
-	}
 }
