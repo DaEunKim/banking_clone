@@ -28,7 +28,7 @@ public class BankingApiController {
 	/**
 	 * @author : DaEunKim
 	 * @Description
-	 * 1. 모바일에서 신분증 경로를 알려주면서 인증 요청을 받으면 (내가 개발할 API)
+	 * 1. 모바일에서 유저 아이디와 신분증 경로를 알려주면서 인증 요청을 받으면 (내가 개발할 API) - 모바일에게 유저아이디랑 신분증 경로 주세요~ 요청
 	 * 2. 유저 정보 요청 API(고객 개발 AP의 API) -> 값을 포함한 응답 정상이면 저장 (sync)(응답 올 때까지 대기)
 	 * 3. 인증 개발 AP로 신분증 분석 요청 API(인증 개발 AP의 API) -> 분석 결과 값을 포함한 응답 정상이면 저장 (sync)
 	 * 분석 결과 값(주민번호 분석 등) 유저 정보와 비교 로직
@@ -50,25 +50,52 @@ public class BankingApiController {
 	/**
 	 * @author : DaEunKim
 	 * @Description 신분증 분석 정보 비교 및 저장 API
+	 * 모바일에서 유저 아이디와 신분증 경로를 포함 데이터를 전송, MEMBER_INFO 테이블엔 user_id 중복 없음
 	 */
 	@PostMapping(value = "/updateIdCardInfo")
-	public String updateIdCardInfo(@RequestBody MemberInfo memberInfo, OpenAccountCheckLog openAccountCheckLog, SetAccountProcess setAccountProcess) {
-		//임의로 set_account_process_pk는 1로 설정
-		memberInfo.setINDEX(1);
+	public MemberInfo updateIdCardInfo(@RequestBody HashMap<String, String> MobileUserInfo) throws Exception{
+
+		// 모바일에서 준 유저 아이디로 고객 정보에서 준 주
 		// 유저 테이블에서 유저정보 가져오기 이름과 주민번호
 		// 신분증 분석 결과로 나온 유저 이름과 주민번호 가져오기
 		// DB 에 저장된 값을 호출해서 두 정보 비교
 		// 맞으면 계좌 개설 테이블에 insert, 틀리면 오류 테이블에 insert
 		// 응답 return
-		//
-		String compName = identiCheckService.selectName(memberInfo);
-		if(compName.equals(memberInfo.getIDCARD_USER_NAME())){
-			identiCheckService.updateIdCardInfo(memberInfo);
+
+
+		log.info("MobileUserInfo " + MobileUserInfo.get("user_ID"));
+		MemberInfo userInfo = identiCheckService.selectCheckName(MobileUserInfo.get("user_ID"));
+
+
+		log.info("userInfo " + userInfo);
+
+		if(userInfo==null){
+			// 유저 정보가 존재하지 않습니다.
+			log.info("userInfo empty ");
 		}
 		else{
-			identiCheckService.insertLog(openAccountCheckLog, setAccountProcess);
+			if(MobileUserInfo.get("user_ID").equals(userInfo.getIDCARD_USER_NAME())){
+				log.info("equal " + userInfo.getUSER_NAME());
+//				SET_ACCOUNT_PROCESS 테이블에 Y insert
+// 				OPEN_ACCOUNT_CHECK_LOG 기록
+//				STAGE_TYPE identi, STAGE_STATUE success, 시간
+
+//				identiCheckService.updateIdCardInfo(memberInfo);
+			}
+			else{
+//				SET_ACCOUNT_PROCESS 테이블에 N insert
+//				OPEN_ACCOUNT_CHECK_LOG insert STAGE_TYPE identi, STAGE_STATUE fail, 시
+			}
 		}
-		return "send success";
+
+//		log.info("userName"+ user_info);
+//		if(userName.equals(memberInfo.getIDCARD_USER_NAME())){
+//			identiCheckService.updateIdCardInfo(memberInfo);
+//		}
+//		else{
+//			identiCheckService.insertLog(openAccountCheckLog, setAccountProcess);
+//		}
+		return userInfo;
 	}
 
 	/**

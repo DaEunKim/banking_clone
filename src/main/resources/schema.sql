@@ -36,8 +36,8 @@ CREATE TABLE OPEN_ACCOUNT_CHECK_LOG
 (
 	INDEX INT auto_increment not null,
 	SET_ACCOUNT_PROCESS_PK INT, -- SET_ACCOUNT_PROCESS 테이블 PK (계좌 개설 절차 정보)
-	STAGE_TYPE VARCHAR(100), -- 로그 타입 (identi, certifi, transfer)
-	STAGE_STATUE VARCHAR(100), -- 정상, 오류 구별 (success, error)
+	STAGE_TYPE VARCHAR(100), -- 로그 타입 (identi, certifiword, transfer)
+	STAGE_STATUE VARCHAR(100), -- 정상, 오류 구별 (success, fail)
 	LOG_DATETIME DATE, -- 로그 발생 일시
 	primary key (INDEX)
 );

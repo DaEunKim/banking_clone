@@ -4,6 +4,7 @@ import com.example.banking.model.MemberInfo;
 import com.example.banking.model.OpenAccountCheckLog;
 import com.example.banking.model.SetAccountProcess;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -12,13 +13,14 @@ import java.util.List;
  * @Description : 신분증 인증 구현 DAO 인터페이스
  */
 public interface ApiDao {
-	String selectName(MemberInfo memberInfo);
-
 	List<MemberInfo> selectAllMemberInfo();
 
 	List<SetAccountProcess> selectAllSetAccountProcess();
 
 	List<OpenAccountCheckLog> selectAllAccountLog();
+
+	/** @Description : 고객 정보 확인 함수  */
+	MemberInfo selectCheckName(String mobileUserInfo);
 
 	int insertMemberInfo(MemberInfo memberInfo);
 
@@ -27,4 +29,5 @@ public interface ApiDao {
 	int updateIdCardInfo(MemberInfo memberInfo);
 
 	int insertIdentiErrorLog(OpenAccountCheckLog openAccountCheckLog);
+
 }

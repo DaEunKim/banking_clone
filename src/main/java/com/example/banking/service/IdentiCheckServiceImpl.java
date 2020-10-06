@@ -7,6 +7,7 @@ import com.example.banking.model.SetAccountProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,25 +20,29 @@ public class IdentiCheckServiceImpl implements IdentiCheckService{
 	@Autowired
 	private ApiDaoImpl apiDao;
 
+	/** @Description : MEMBER_INFO 테이블 데이터 확인 함수 */
 	@Override
-	public String selectName(MemberInfo memberInfo) {
-		return apiDao.selectName(memberInfo);
-	}
-	@Override
-	public List<MemberInfo> selectAllMemberInfo(){
+	public List<MemberInfo> selectAllMemberInfo(){ return apiDao.selectAllMemberInfo(); }
 
-		return apiDao.selectAllMemberInfo();
-	}
-
+	/** @Description : SET_ACCOUNT_PROCESS 테이블 데이터 확인 함수 */
 	@Override
 	public List<SetAccountProcess> selectAllSetAccountProcess() {
 		return apiDao.selectAllSetAccountProcess();
 	}
 
+	/** @Description : OPEN_ACCOUNT_CHECK_LOG 테이블 데이터 확인 함수 */
 	@Override
 	public List<OpenAccountCheckLog> selectAllAccountLog() {
 		return apiDao.selectAllAccountLog();
 	}
+
+
+	/** @Description : 고객 정보 확인 함수  */
+	@Override
+	public MemberInfo selectCheckName(String mobileUserInfo ) {
+		return apiDao.selectCheckName(mobileUserInfo);
+	}
+
 
 	@Override
 	public int insertMemberInfo(MemberInfo memberInfo){
@@ -67,6 +72,7 @@ public class IdentiCheckServiceImpl implements IdentiCheckService{
 		apiDao.insertIdentiErrorLog(openAccountCheckLog);
 		return setAccountProcess.getIDENTI_CHECK();
 	}
+
 
 
 }
