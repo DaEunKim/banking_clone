@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author : DaEunKim
  * @version : 2020.09.19
- * @Description : Mapper 연결을 위한 DAO 구현체 
+ * @Description : Mapper 연결을 위한 DAO 구현체
  */
 @Repository
 public class ApiDaoImpl implements ApiDao{

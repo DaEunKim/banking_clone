@@ -77,7 +77,7 @@ public class BankingApiController {
 	 */
 	@GetMapping("/selectAll")
 	public Map<String, List> selectAll() {
-		Map<String, List> map = new HashMap<String, List>();
+		Map<String, List> map = new HashMap<>();
 
 		List<MemberInfo> selectAllMemberInfo = identiCheckService.selectAllMemberInfo();
 		List<SetAccountProcess> selectAllSetAccountProcess = identiCheckService.selectAllSetAccountProcess();
@@ -86,6 +86,7 @@ public class BankingApiController {
 		map.put("selectAllMemberInfo",selectAllMemberInfo);
 		map.put("selectAllSetAccountProcess", selectAllSetAccountProcess);
 		map.put("selectAllAccountLog", selectAllAccountLog);
+
 		return map;
 	}
 
