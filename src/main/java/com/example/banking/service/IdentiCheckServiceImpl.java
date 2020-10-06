@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author : DaEunKim
  * @version : 2020.09.11
- * @Description : 신분증 인증 구현 서비스
+ * @Description : 신분증 인증 구현 서비스 구현체 
  */
 @Service
 public class IdentiCheckServiceImpl implements IdentiCheckService{
