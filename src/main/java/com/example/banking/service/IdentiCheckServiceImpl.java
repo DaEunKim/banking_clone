@@ -1,6 +1,6 @@
 package com.example.banking.service;
 
-import com.example.banking.dao.ApiDao;
+import com.example.banking.dao.ApiDaoImpl;
 import com.example.banking.model.MemberInfo;
 import com.example.banking.model.OpenAccountCheckLog;
 import com.example.banking.model.SetAccountProcess;
@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * @author : DaEunKim
  * @version : 2020.09.11
- * @Description : 신분증 인증 구현 서비스 구현체 
+ * @Description : 신분증 인증 구현 서비스 구현체
  */
 @Service
 public class IdentiCheckServiceImpl implements IdentiCheckService{
 	@Autowired
-	private ApiDao apiDao;
+	private ApiDaoImpl apiDao;
 
 	@Override
 	public String selectName(MemberInfo memberInfo) {
@@ -28,6 +28,17 @@ public class IdentiCheckServiceImpl implements IdentiCheckService{
 
 		return apiDao.selectAllMemberInfo();
 	}
+
+	@Override
+	public List<SetAccountProcess> selectAllSetAccountProcess() {
+		return apiDao.selectAllSetAccountProcess();
+	}
+
+	@Override
+	public List<OpenAccountCheckLog> selectAllAccountLog() {
+		return apiDao.selectAllAccountLog();
+	}
+
 	@Override
 	public int insertMemberInfo(MemberInfo memberInfo){
 		return apiDao.insertMemberInfo(memberInfo);
@@ -57,13 +68,5 @@ public class IdentiCheckServiceImpl implements IdentiCheckService{
 		return setAccountProcess.getIDENTI_CHECK();
 	}
 
-	@Override
-	public List<SetAccountProcess> selectAllSetAccountProcess() {
-		return null;
-	}
 
-	@Override
-	public List<OpenAccountCheckLog> selectAllAccountLog() {
-		return null;
-	}
 }

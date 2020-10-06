@@ -2,44 +2,29 @@ package com.example.banking.dao;
 
 import com.example.banking.model.MemberInfo;
 import com.example.banking.model.OpenAccountCheckLog;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import com.example.banking.model.SetAccountProcess;
+
 import java.util.List;
 
 /**
  * @author : DaEunKim
- * @version : 2020.09.19
- * @Description : Mapper 연결을 위한 DAO
+ * @version : 2020.10.06
+ * @Description : 신분증 인증 구현 DAO 인터페이스
  */
-@Repository
-public class ApiDao {
-	protected static final String NAMESPACE = "com.example.banking.dao.";
+public interface ApiDao {
+	String selectName(MemberInfo memberInfo);
 
-	@Autowired
-	private SqlSession sqlSession;
+	List<MemberInfo> selectAllMemberInfo();
 
-	public String selectName(MemberInfo memberInfo) {
-		return sqlSession.selectOne(NAMESPACE + "selectName", memberInfo);
-	}
+	List<SetAccountProcess> selectAllSetAccountProcess();
 
-	public List<MemberInfo> selectAllMemberInfo(){
-		return sqlSession.selectList(NAMESPACE + "selectAllMemberInfo");
-	}
-	public int insertMemberInfo(MemberInfo memberInfo){
-		return sqlSession.insert(NAMESPACE + "insertMemberInfo", memberInfo);
-	}
+	List<OpenAccountCheckLog> selectAllAccountLog();
 
-	public int updateIdCardImg(MemberInfo memberInfo) {
-		return sqlSession.update(NAMESPACE+"updateIdCardImg", memberInfo);
-	}
+	int insertMemberInfo(MemberInfo memberInfo);
 
-	public int updateIdCardInfo(MemberInfo memberInfo) {
-		return sqlSession.update(NAMESPACE+"updateIdCardInfo", memberInfo);
-	}
-	public int insertIdentiErrorLog(OpenAccountCheckLog openAccountCheckLog) {
-		return sqlSession.insert(NAMESPACE+"insertIdentiErrorLog", openAccountCheckLog);
-	}
+	int updateIdCardImg(MemberInfo memberInfo);
 
+	int updateIdCardInfo(MemberInfo memberInfo);
 
+	int insertIdentiErrorLog(OpenAccountCheckLog openAccountCheckLog);
 }
