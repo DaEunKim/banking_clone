@@ -6,6 +6,9 @@ import com.example.banking.model.SetAccountProcess;
 import com.example.banking.service.IdentiCheckService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,55 +50,48 @@ public class BankingApiController {
 	 * 모바일에서 유저 아이디와 신분증 경로를 포함 데이터를 전송, MEMBER_INFO 테이블엔 user_id 중복 없음
 	 */
 	@PostMapping(value = "/compareInfo")
-	public MemberInfo updateIdCardInfo(@RequestBody HashMap<String, String> MobileUserInfo, SetAccountProcess setAccountProcess, OpenAccountCheckLog openAccountCheckLog) throws Exception{
-
-		// 모바일에서 준 유저 아이디로 준 것으로 select
-		// 유저 테이블에서 유저정보 가져오기 이름과 주민번호
-		// 신분증 분석 결과로 나온 유저 이름과 주민번호 가져오기
-		// DB 에 저장된 값을 호출해서 두 정보 비교
+	public ResponseEntity<MemberInfo> compareInfo(@RequestBody HashMap<String, String> MobileUserInfo, SetAccountProcess setAccountProcess, OpenAccountCheckLog openAccountCheckLog) throws Exception{
+		HttpHeaders responseHeaders = new HttpHeaders();
 
 		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
 		Date time = new Date();
 		String todayDate = format1.format(time);
 
-		log.info("MobileUserInfo " + MobileUserInfo.get("user_ID"));
 		// 모바일에서 받은 유저 아이디로 유저 정보 select
 		MemberInfo userInfo = identiCheckService.selectCheckName(MobileUserInfo.get("user_ID"));
-		log.info("userInfo " + userInfo);
 		// 유저 PK로 계좌 개설 과정 테이블 row select
 		SetAccountProcess accountProcess = identiCheckService.selectAccountProcess(userInfo.getINDEX());
-		log.info("accountProcess PK " + accountProcess.getINDEX());
 
 		setAccountProcess.setUSER_INFO_PK(userInfo.getINDEX());
 		openAccountCheckLog.setSET_ACCOUNT_PROCESS_PK(accountProcess.getINDEX());
 		openAccountCheckLog.setSTAGE_TYPE("identi");
 
 		if(userInfo==null){
-			log.info("유저 정보가 존재하지 않습니다.");
+			responseHeaders.set("result", "Can't find user");
 		}
 		else{
-
 			if(userInfo.getUSER_NAME().equals(userInfo.getIDCARD_USER_NAME()) && userInfo.getREGIS_NUM().equals(userInfo.getIDCARD_REGIS_NUM())){
-				// 유저 정보와 신분증 정보가 일치하는 경우
-				log.info("equal " + userInfo.getUSER_NAME());
+				// 유저 정보와 신분증 정보가 일치하는 경우(이름과 주민번호)
 				setAccountProcess.setIDENTI_CHECK("Y");
 				openAccountCheckLog.setSTAGE_STATUE("success");
 				openAccountCheckLog.setLOG_DATETIME(todayDate);
+
+				responseHeaders.set("result", "success to match");
 			}
 			else{
-				log.info("unequal " + userInfo.getUSER_NAME());
 				setAccountProcess.setIDENTI_CHECK("N");
 				openAccountCheckLog.setSTAGE_STATUE("fail");
 				openAccountCheckLog.setLOG_DATETIME(todayDate);
-			}
 
+				responseHeaders.set("result", "fail to match, wrong identification");
+			}
 			// 계좌 개설 과정 테이블에는 update
 			identiCheckService.updateIdentiCheck(setAccountProcess);
 			// 로그 테이블에는 insert
 			identiCheckService.insertIdentiLog(openAccountCheckLog);
 		}
 
-		return userInfo;
+		return new ResponseEntity(userInfo, responseHeaders, HttpStatus.OK);
 	}
 
 	/**
