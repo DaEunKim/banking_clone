@@ -58,11 +58,11 @@ public class BankingApiController {
 		Date time = new Date();
 		String todayDate = format1.format(time);
 
-
 		log.info("MobileUserInfo " + MobileUserInfo.get("user_ID"));
 		// 모바일에서 받은 유저 아이디로 유저 정보 select
 		MemberInfo userInfo = identiCheckService.selectCheckName(MobileUserInfo.get("user_ID"));
 		log.info("userInfo " + userInfo);
+		// 유저 PK로 계좌 개설 과정 테이블 row select
 		SetAccountProcess accountProcess = identiCheckService.selectAccountProcess(userInfo.getINDEX());
 		log.info("accountProcess PK " + accountProcess.getINDEX());
 
