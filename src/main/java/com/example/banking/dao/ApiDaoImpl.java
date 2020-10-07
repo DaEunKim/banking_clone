@@ -43,6 +43,11 @@ public class ApiDaoImpl implements ApiDao{
 	public MemberInfo selectCheckName(String mobileUserInfo) {
 		return sqlSession.selectOne(NAMESPACE + "selectCheckName", mobileUserInfo);
 	}
+	/** @Description : 계좌 개설 과정 확인 함수  */
+	@Override
+	public SetAccountProcess selectAccountProcess(Integer userInfoPK) {
+		return sqlSession.selectOne("selectAccountProcess", userInfoPK);
+	}
 
 	/** @Description : 신분증 정보 일치 여부 update 함수  */
 	@Override

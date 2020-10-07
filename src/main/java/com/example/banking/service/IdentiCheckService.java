@@ -25,6 +25,15 @@ public interface IdentiCheckService {
 
 	/** @Description : 고객 정보 확인 함수  */
 	MemberInfo selectCheckName(String mobileUserInfo);
+	/** @Description : 계좌 개설 과정 확인 함수  */
+	SetAccountProcess selectAccountProcess(Integer userInfoPK);
+
+
+	/** @Description : 신분증 정보 일치 여부 update 함수  */
+	int updateIdentiCheck(SetAccountProcess setAccountProcess);
+
+	/** @Description : 계좌 개설 과정 로그 정보 insert 함수  */
+	int insertIdentiLog(OpenAccountCheckLog openAccountCheckLog);
 
 	int insertMemberInfo(MemberInfo memberInfo);
 
@@ -34,9 +43,6 @@ public interface IdentiCheckService {
 
 	String insertLog(OpenAccountCheckLog openAccountCheckLog, SetAccountProcess setAccountProcess);
 
-	/** @Description : 신분증 정보 일치 여부 update 함수  */
-	int updateIdentiCheck(SetAccountProcess setAccountProcess);
 
-	/** @Description : 계좌 개설 과정 로그 정보 insert 함수  */
-	int insertIdentiLog(OpenAccountCheckLog openAccountCheckLog);
+
 }

@@ -21,7 +21,12 @@ import java.util.Map;
 /**
  * @author : DaEunKim
  * @version : 2020.09.18
- * @Description : 뱅킹 Rest API - 신분증 인증 구현 컨트롤러
+ * @Description 뱅킹 Rest API - 신분증 인증 구현 컨트롤러
+ * 1. 모바일에서 유저 아이디와 신분증 경로를 알려주면서 인증 요청을 받으면 (내가 개발할 API) - 모바일에게 유저아이디랑 신분증 경로 주세요~ 요청
+ * 2. 유저 정보 요청 API(고객 개발 AP의 API) -> 값을 포함한 응답 정상이면 저장 (sync)(응답 올 때까지 대기)
+ * 3. 인증 개발 AP로 신분증 분석 요청 API(인증 개발 AP의 API) -> 분석 결과 값을 포함한 응답 정상이면 저장 (sync)
+ * 분석 결과 값(주민번호 분석 등) 유저 정보와 비교 로직
+ * 1번 모바일 API 응답(sync)
  */
 @Slf4j
 @RestController
@@ -29,18 +34,7 @@ import java.util.Map;
 public class BankingApiController {
 	@Autowired
 	IdentiCheckService identiCheckService;
-
-	/**
-	 * @author : DaEunKim
-	 * @Description
-	 * 1. 모바일에서 유저 아이디와 신분증 경로를 알려주면서 인증 요청을 받으면 (내가 개발할 API) - 모바일에게 유저아이디랑 신분증 경로 주세요~ 요청
-	 * 2. 유저 정보 요청 API(고객 개발 AP의 API) -> 값을 포함한 응답 정상이면 저장 (sync)(응답 올 때까지 대기)
-	 * 3. 인증 개발 AP로 신분증 분석 요청 API(인증 개발 AP의 API) -> 분석 결과 값을 포함한 응답 정상이면 저장 (sync)
-	 * 분석 결과 값(주민번호 분석 등) 유저 정보와 비교 로직
-	 * 1번 모바일 API 응답(sync)
-	 */
-
-
+	
 	/**
 	 * @author : DaEunKim
 	 * @Description 고객 개발 AP의 유저 정보와 모바일 앱의 신분증 이미지 저장하는 API
@@ -64,14 +58,7 @@ public class BankingApiController {
 		// 유저 테이블에서 유저정보 가져오기 이름과 주민번호
 		// 신분증 분석 결과로 나온 유저 이름과 주민번호 가져오기
 		// DB 에 저장된 값을 호출해서 두 정보 비교
-		// 맞으면
-		//	SET_ACCOUNT_PROCESS 테이블에 Y insert
-		// OPEN_ACCOUNT_CHECK_LOG 기록
-		// STAGE_TYPE identi, STAGE_STATUE success, 시간
-		// 틀리면
-		// SET_ACCOUNT_PROCESS 테이블에 N insert
-		// OPEN_ACCOUNT_CHECK_LOG insert STAGE_TYPE identi, STAGE_STATUE fail, 시간
-		// 응답 return
+
 		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
 		Date time = new Date();
 		String todayDate = format1.format(time);
@@ -81,15 +68,20 @@ public class BankingApiController {
 		// 모바일에서 받은 유저 아이디로 유저 정보 select
 		MemberInfo userInfo = identiCheckService.selectCheckName(MobileUserInfo.get("user_ID"));
 		log.info("userInfo " + userInfo);
+		SetAccountProcess accountProcess = identiCheckService.selectAccountProcess(userInfo.getINDEX());
+		log.info("accountProcess PK " + accountProcess.getINDEX());
 
 		setAccountProcess.setUSER_INFO_PK(userInfo.getINDEX());
+		openAccountCheckLog.setSET_ACCOUNT_PROCESS_PK(accountProcess.getINDEX());
 		openAccountCheckLog.setSTAGE_TYPE("identi");
 
 		if(userInfo==null){
 			log.info("유저 정보가 존재하지 않습니다.");
 		}
 		else{
+
 			if(userInfo.getUSER_NAME().equals(userInfo.getIDCARD_USER_NAME()) && userInfo.getREGIS_NUM().equals(userInfo.getIDCARD_REGIS_NUM())){
+				// 유저 정보와 신분증 정보가 일치하는 경우
 				log.info("equal " + userInfo.getUSER_NAME());
 				setAccountProcess.setIDENTI_CHECK("Y");
 				openAccountCheckLog.setSTAGE_STATUE("success");
@@ -102,11 +94,11 @@ public class BankingApiController {
 				openAccountCheckLog.setLOG_DATETIME(todayDate);
 			}
 
+			// 계좌 개설 과정 테이블에는 update
 			identiCheckService.updateIdentiCheck(setAccountProcess);
-
+			// 로그 테이블에는 insert
 			identiCheckService.insertIdentiLog(openAccountCheckLog);
 		}
-
 
 		return userInfo;
 	}

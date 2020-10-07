@@ -41,6 +41,11 @@ public class IdentiCheckServiceImpl implements IdentiCheckService{
 	public MemberInfo selectCheckName(String mobileUserInfo ) {
 		return apiDao.selectCheckName(mobileUserInfo);
 	}
+	/** @Description : 계좌 개설 과정 확인 함수  */
+	@Override
+	public SetAccountProcess selectAccountProcess(Integer userInfoPK) {
+		return apiDao.selectAccountProcess(userInfoPK);
+	}
 
 
 	@Override

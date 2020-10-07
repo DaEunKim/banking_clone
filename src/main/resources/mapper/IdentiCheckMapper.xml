@@ -16,6 +16,10 @@
         select * from MEMBER_INFO where USER_ID=#{USER_ID}
     </select>
 
+    <select id="selectAccountProcess" parameterType="Integer" resultType="com.example.banking.model.SetAccountProcess">
+        select * from SET_ACCOUNT_PROCESS where USER_INFO_PK=#{USER_INFO_PK}
+    </select>
+
     <insert id="insertMemberInfo" parameterType="com.example.banking.model.MemberInfo">
         INSERT INTO MEMBER_INFO (user_id, user_name) VALUES (#{user_id}, #{user_name})
     </insert>
