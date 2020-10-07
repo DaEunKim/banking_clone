@@ -30,4 +30,8 @@ public interface ApiDao {
 
 	int insertIdentiErrorLog(OpenAccountCheckLog openAccountCheckLog);
 
+	/** @Description : 신분증 정보 일치 여부 update 함수  */
+	int updateIdentiCheck(SetAccountProcess setAccountProcess);
+	/** @Description : 계좌 개설 과정 로그 정보 insert 함수  */
+	int insertIdentiLog(OpenAccountCheckLog openAccountCheckLog);
 }

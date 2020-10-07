@@ -9,6 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,48 +58,56 @@ public class BankingApiController {
 	 * 모바일에서 유저 아이디와 신분증 경로를 포함 데이터를 전송, MEMBER_INFO 테이블엔 user_id 중복 없음
 	 */
 	@PostMapping(value = "/updateIdCardInfo")
-	public MemberInfo updateIdCardInfo(@RequestBody HashMap<String, String> MobileUserInfo) throws Exception{
+	public MemberInfo updateIdCardInfo(@RequestBody HashMap<String, String> MobileUserInfo, SetAccountProcess setAccountProcess, OpenAccountCheckLog openAccountCheckLog) throws Exception{
 
 		// 모바일에서 준 유저 아이디로 준 것으로 select
 		// 유저 테이블에서 유저정보 가져오기 이름과 주민번호
 		// 신분증 분석 결과로 나온 유저 이름과 주민번호 가져오기
 		// DB 에 저장된 값을 호출해서 두 정보 비교
-		// 맞으면 계좌 개설 테이블에 insert, 틀리면 오류 테이블에 insert
+		// 맞으면
+		//	SET_ACCOUNT_PROCESS 테이블에 Y insert
+		// OPEN_ACCOUNT_CHECK_LOG 기록
+		// STAGE_TYPE identi, STAGE_STATUE success, 시간
+		// 틀리면
+		// SET_ACCOUNT_PROCESS 테이블에 N insert
+		// OPEN_ACCOUNT_CHECK_LOG insert STAGE_TYPE identi, STAGE_STATUE fail, 시간
 		// 응답 return
+		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+		Date time = new Date();
+		String todayDate = format1.format(time);
 
 
 		log.info("MobileUserInfo " + MobileUserInfo.get("user_ID"));
+		// 모바일에서 받은 유저 아이디로 유저 정보 select
 		MemberInfo userInfo = identiCheckService.selectCheckName(MobileUserInfo.get("user_ID"));
-
-
 		log.info("userInfo " + userInfo);
 
+		setAccountProcess.setUSER_INFO_PK(userInfo.getINDEX());
+		openAccountCheckLog.setSTAGE_TYPE("identi");
+
 		if(userInfo==null){
-			// 유저 정보가 존재하지 않습니다.
-			log.info("userInfo empty ");
+			log.info("유저 정보가 존재하지 않습니다.");
 		}
 		else{
 			if(userInfo.getUSER_NAME().equals(userInfo.getIDCARD_USER_NAME()) && userInfo.getREGIS_NUM().equals(userInfo.getIDCARD_REGIS_NUM())){
 				log.info("equal " + userInfo.getUSER_NAME());
-//				SET_ACCOUNT_PROCESS 테이블에 Y insert
-// 				OPEN_ACCOUNT_CHECK_LOG 기록
-//				STAGE_TYPE identi, STAGE_STATUE success, 시간
-
-//				identiCheckService.updateIdCardInfo(memberInfo);
+				setAccountProcess.setIDENTI_CHECK("Y");
+				openAccountCheckLog.setSTAGE_STATUE("success");
+				openAccountCheckLog.setLOG_DATETIME(todayDate);
 			}
 			else{
-//				SET_ACCOUNT_PROCESS 테이블에 N insert
-//				OPEN_ACCOUNT_CHECK_LOG insert STAGE_TYPE identi, STAGE_STATUE fail, 시
+				log.info("unequal " + userInfo.getUSER_NAME());
+				setAccountProcess.setIDENTI_CHECK("N");
+				openAccountCheckLog.setSTAGE_STATUE("fail");
+				openAccountCheckLog.setLOG_DATETIME(todayDate);
 			}
+
+			identiCheckService.updateIdentiCheck(setAccountProcess);
+
+			identiCheckService.insertIdentiLog(openAccountCheckLog);
 		}
 
-//		log.info("userName"+ user_info);
-//		if(userName.equals(memberInfo.getIDCARD_USER_NAME())){
-//			identiCheckService.updateIdCardInfo(memberInfo);
-//		}
-//		else{
-//			identiCheckService.insertLog(openAccountCheckLog, setAccountProcess);
-//		}
+
 		return userInfo;
 	}
 

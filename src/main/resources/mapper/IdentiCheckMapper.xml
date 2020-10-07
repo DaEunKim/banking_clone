@@ -19,9 +19,26 @@
     <insert id="insertMemberInfo" parameterType="com.example.banking.model.MemberInfo">
         INSERT INTO MEMBER_INFO (user_id, user_name) VALUES (#{user_id}, #{user_name})
     </insert>
+
+    <update id="updateIdentiCheck" parameterType="com.example.banking.model.SetAccountProcess">
+        UPDATE SET_ACCOUNT_PROCESS
+        SET IDENTI_CHECK=#{IDENTI_CHECK}
+        WHERE USER_INFO_PK=#{USER_INFO_PK}
+    </update>
+
+    <insert id="insertIdentiLog" parameterType="com.example.banking.model.OpenAccountCheckLog">
+        INSERT INTO OPEN_ACCOUNT_CHECK_LOG (SET_ACCOUNT_PROCESS_PK, STAGE_TYPE, STAGE_STATUE, LOG_DATETIME)
+        VALUES (#{SET_ACCOUNT_PROCESS_PK}, #{STAGE_TYPE}, #{STAGE_STATUE}, #{LOG_DATETIME});
+    </insert>
+
+
+
+
+<!--    -->
     <update id="updateIdCardImg" parameterType="com.example.banking.model.MemberInfo">
         UPDATE MEMBER_INFO SET idcard_img=#{idcard_img} WHERE user_id=#{user_id}
     </update>
+
 
     <update id="updateIdCardInfo" parameterType="com.example.banking.model.MemberInfo">
         UPDATE MEMBER_INFO SET
@@ -32,10 +49,5 @@
         WHERE user_id=#{user_id}
     </update>
 
-    <insert id="insertIdentiErrorLog" parameterType="com.example.banking.model.OpenAccountCheckLog">
-        INSERT INTO
-        IDENTI_CHECK_ERROR_LOG (set_account_process_PK, type, status)
-        VALUES (#{set_account_process_PK}, #{type}, #{status});
-    </insert>
 
 </mapper>

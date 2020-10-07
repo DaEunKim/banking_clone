@@ -1,13 +1,12 @@
 package com.example.banking.service;
 
-import com.example.banking.dao.ApiDaoImpl;
+import com.example.banking.dao.ApiDao;
+
 import com.example.banking.model.MemberInfo;
 import com.example.banking.model.OpenAccountCheckLog;
 import com.example.banking.model.SetAccountProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
 @Service
 public class IdentiCheckServiceImpl implements IdentiCheckService{
 	@Autowired
-	private ApiDaoImpl apiDao;
+	private ApiDao apiDao;
 
 	/** @Description : MEMBER_INFO 테이블 데이터 확인 함수 */
 	@Override
@@ -62,17 +61,29 @@ public class IdentiCheckServiceImpl implements IdentiCheckService{
 
 	@Override
 	public String insertLog(OpenAccountCheckLog openAccountCheckLog, SetAccountProcess setAccountProcess){
-		Date now = new Date();
-		openAccountCheckLog.setSET_ACCOUNT_PROCESS_PK(1);
-		openAccountCheckLog.setSTAGE_TYPE("identi");
-		openAccountCheckLog.setSTAGE_STATUE("error");
-		openAccountCheckLog.setLOG_DATETIME(now);
-		setAccountProcess.setIDENTI_CHECK("N");
-
-		apiDao.insertIdentiErrorLog(openAccountCheckLog);
+//		Date now = new Date();
+//		openAccountCheckLog.setSET_ACCOUNT_PROCESS_PK(1);
+//		openAccountCheckLog.setSTAGE_TYPE("identi");
+//		openAccountCheckLog.setSTAGE_STATUE("error");
+//		openAccountCheckLog.setLOG_DATETIME(now);
+//		setAccountProcess.setIDENTI_CHECK("N");
+//
+//		apiDao.insertIdentiErrorLog(openAccountCheckLog);
 		return setAccountProcess.getIDENTI_CHECK();
 	}
 
+
+	/** @Description : 신분증 정보 일치 여부 update 함수  */
+	@Override
+	public int updateIdentiCheck(SetAccountProcess setAccountProcess) {
+		return apiDao.updateIdentiCheck(setAccountProcess);
+	}
+
+	/** @Description : 계좌 개설 과정 로그 정보 insert 함수  */
+	@Override
+	public int insertIdentiLog(OpenAccountCheckLog openAccountCheckLog) {
+		return apiDao.insertIdentiLog(openAccountCheckLog);
+	}
 
 
 }

@@ -44,6 +44,18 @@ public class ApiDaoImpl implements ApiDao{
 		return sqlSession.selectOne(NAMESPACE + "selectCheckName", mobileUserInfo);
 	}
 
+	/** @Description : 신분증 정보 일치 여부 update 함수  */
+	@Override
+	public int updateIdentiCheck(SetAccountProcess setAccountProcess) {
+		return sqlSession.update("updateIdentiCheck", setAccountProcess);
+	}
+	/** @Description : 계좌 개설 과정 로그 정보 insert 함수  */
+	@Override
+	public int insertIdentiLog(OpenAccountCheckLog openAccountCheckLog) {
+		return sqlSession.insert("insertIdentiLog", openAccountCheckLog);
+	}
+
+
 	@Override
 	public int insertMemberInfo(MemberInfo memberInfo){
 		return sqlSession.insert(NAMESPACE + "insertMemberInfo", memberInfo);
@@ -63,7 +75,6 @@ public class ApiDaoImpl implements ApiDao{
 	public int insertIdentiErrorLog(OpenAccountCheckLog openAccountCheckLog) {
 		return sqlSession.insert(NAMESPACE+"insertIdentiErrorLog", openAccountCheckLog);
 	}
-
 
 
 }
