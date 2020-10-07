@@ -4,15 +4,10 @@ import com.example.banking.model.MemberInfo;
 import com.example.banking.model.OpenAccountCheckLog;
 import com.example.banking.model.SetAccountProcess;
 import com.example.banking.service.IdentiCheckService;
-import com.example.banking.service.IdentiCheckServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +29,7 @@ import java.util.Map;
 public class BankingApiController {
 	@Autowired
 	IdentiCheckService identiCheckService;
-	
+
 	/**
 	 * @author : DaEunKim
 	 * @Description 고객 개발 AP의 유저 정보와 모바일 앱의 신분증 이미지 저장하는 API
@@ -51,7 +46,7 @@ public class BankingApiController {
 	 * @Description 신분증 분석 정보 비교 및 저장 API
 	 * 모바일에서 유저 아이디와 신분증 경로를 포함 데이터를 전송, MEMBER_INFO 테이블엔 user_id 중복 없음
 	 */
-	@PostMapping(value = "/updateIdCardInfo")
+	@PostMapping(value = "/compareInfo")
 	public MemberInfo updateIdCardInfo(@RequestBody HashMap<String, String> MobileUserInfo, SetAccountProcess setAccountProcess, OpenAccountCheckLog openAccountCheckLog) throws Exception{
 
 		// 모바일에서 준 유저 아이디로 준 것으로 select
